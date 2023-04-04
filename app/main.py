@@ -24,7 +24,8 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     app = Flask(__name__)
     db = LinkDB(MONGOURI)
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
+    gd = None
+    #gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
     app.register_blueprint(create_blueprint(gd, CF_WORKER_SITE), url_prefix="/api")
     links_result = LinkMaker(CF_WORKER_SITE, stream_link=True, process_link=True, cf_download_link=True)
     link_final_page = LinkMaker(CF_WORKER_SITE, stream_link=True, gdrive_link=True, cf_download_link=True)

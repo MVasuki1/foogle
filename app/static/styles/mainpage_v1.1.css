@@ -598,7 +598,7 @@ z-index: 1;
 
 .link_panel.shown{
     margin-top: -10px;
-    height : 300px;
+    height : 75px;
     box-shadow: 2px 2px 5px 1px #00000063;
     overflow-y: scroll;
     overflow-wrap: anywhere;
@@ -608,7 +608,7 @@ z-index: 1;
 
 
 .button_container{
-    width: 120px;
+    width: 80px;
     height: 35px;
     background-color: var(-- aliceblue);
     border: 2px solid var(--bg-red);
