@@ -6,7 +6,7 @@
 <div class="search_box_div" id="search_box_div_id">
   <form id="search_form" type="submit" action="/series_search">
     <input type="text" name="search_box" autocomplete="off" class="search_box" id="search_box">
-    <div class="selction_panel">
+    <!-- <div class="selction_panel">
       <div id="session_selector">
         <select name="sess_nm" id="sess_nm" size="1">
           {% for i in range(1, 20) %}
@@ -21,7 +21,7 @@
           {% endfor %}
         </select>
       </div>
-    </div>
+    </div> -->
   </form>
   <button type="submit" id="btnSubmit" form="search_form"><i class="fa-solid fa-magnifying-glass"
       style="font-size: 1em;padding: 8px; color:white;"></i></button>
@@ -34,9 +34,47 @@
 </div>
 </template>
 <div class="auto-box" id="auto_box_id"></div>
-
+<div class="suggest" id="suggest_box_id"></div>
+<template id="card_block">
+  <div class="card_section">
+      <div class="title">Default Title</div>
+      <div class="cards"></div>
+  </div>
+</template>
 
 <script>
+    const sugg = document.querySelector(".suggest");
+    
+    function add_card_block(url, title){
+    var card_block_popular = document.getElementById("card_block").content.cloneNode(true);
+    card_block_popular.querySelectorAll("div")[1].innerText = title;
+    // fetch(url).then(resp => resp.json()).then(res => {
+    var myHeaders = new Headers();
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+
+    var myInit = {
+      method: 'GET',
+      headers: myHeaders,
+    };
+    var myRequest = new Request(url);
+    // fetch(myRequest, myInit).then(resp => resp.json()).then(res => {
+    fetch(url, {mode: 'cors'}).then(resp => resp.json()).then(res => {
+        res["results"].forEach(item => {
+            var temp_card = document.createElement("div");
+            temp_card.classList.add("card");
+            var poster = item["poster_path"]
+            var posterUrl = "https://image.tmdb.org/t/p/w200/" + poster
+            // temp_card.innerHTML = `<a href="/search?search_box=${item["title"]}&release_year=${item["release_date"].slice(0, 4)}"><img class="card_poster_img" width="100px" src="${posterUrl}"></img></a>`
+            temp_card.innerHTML = `<a href="/season_details/${item["id"]}/${item["season"]}"><img class="card_poster_img" width="100px" src="${posterUrl}"></img></a>`
+            card_block_popular.querySelectorAll(".cards")[0].appendChild(temp_card)
+        });
+        sugg.appendChild(card_block_popular);
+    })
+    }
+    // add_card_block("https://api.themoviedb.org/3/trending/movie/day?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1", "Trending Today");
+
+    add_card_block("http://192.168.0.100:8080/ongoing.json", "Ongoing KDramas")
   const input = document.querySelector("input");
   input.addEventListener("keyup", async () => {
     let box = document.getElementById("auto_box_id");
